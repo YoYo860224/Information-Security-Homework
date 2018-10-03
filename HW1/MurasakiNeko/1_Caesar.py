@@ -1,4 +1,4 @@
-input = "KeepGoingNeverGiveUp"
+input = "keepgoingnevergiveup"
 key = 7
 
 print("input:", input, "key:", key)
@@ -6,18 +6,10 @@ print("input:", input, "key:", key)
 # Encryption
 encryption = ""
 for char in input:
-    if ord(char) >= ord('a'):
-        base = ord('a')
-    else:
-        base = ord('A')
-    encryption += chr((ord(char) - base + key) % 26 + base)
+    encryption += chr((ord(char.upper()) - ord('A') + key) % 26 + ord('A'))
 print("encryption:", encryption)
 # Decryption
 decryption = ""
 for char in encryption:
-    if ord(char) >= ord('a'):
-        base = ord('a')
-    else:
-        base = ord('A')
-    decryption += chr((ord(char) - base - key) % 26 + base)
+    decryption += chr((ord(char.upper()) - ord('A') - key) % 26 + ord('A'))
 print("decryption:", decryption)
