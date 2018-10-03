@@ -1,4 +1,4 @@
-input = "keepgoingnevergiveup"
+input = "KeepGoingNeverGiveUp"
 key = 7
 
 print("input:", input, "key:", key)
