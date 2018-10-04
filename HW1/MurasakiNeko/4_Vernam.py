@@ -1,21 +1,22 @@
 input = "keepgoingnevergiveup"
 key = "CON"
+# input = "helo"
+# key = "qijf"
 
 print("input:", input, "key:", key)
 
 # Encryption
+encryptionKey = key.upper() + input[:len(input) - len(key)].upper()
 encryption = ""
-index = 0
-for char in input:
-    encryption += chr((ord(char.upper()) +
-                       ord(key[index].upper()) - 2 * ord('A')) % 26 + ord('A'))
-    index = (index + 1) % len(key)
+for index in range(len(input)):
+    temp = (ord(input[index].upper()) - ord('A')) ^ (ord(encryptionKey[index]) - ord('A'))
+    encryption += chr(temp + ord('A'))
 print("encryption:", encryption)
 # Decryption
+decryptionKey = key.upper()
 decryption = ""
-index = 0
-for char in encryption:
-    decryption += chr((ord(char.upper()) -
-                       ord(key[index].upper()) - 2 * ord('A') + 26) % 26 + ord('A'))
-    index = (index + 1) % len(key)
+for index in range(len(encryption)):
+    temp = (ord(encryption[index].upper()) - ord('A')) ^ (ord(decryptionKey[index]) - ord('A'))
+    decryption += chr(temp + ord('A'))
+    decryptionKey += chr(temp + ord('A'))
 print("decryption:", decryption)
