@@ -59,7 +59,7 @@ for string in newInput:
     else:
         encryption += playfairKeyInverse[first[0] * 5 + (first[1] + 1) % 5]
         encryption += playfairKeyInverse[second[0] * 5 + (second[1] + 1) % 5]
-print(encryption)
+print("encryption:", encryption)
 # Decryption
 decryption = ""
 for index in range(0, len(encryption), 2):
@@ -76,7 +76,7 @@ for index in range(0, len(encryption), 2):
     else:
         decryption += playfairKeyInverse[first[0] * 5 + (first[1] + 4) % 5]
         decryption += playfairKeyInverse[second[0] * 5 + (second[1] + 4) % 5]
-print(decryption)
+print("decryption:", decryption)
 
 # Question:
 # How to know it is I or J?
