@@ -1,9 +1,9 @@
-input = "kkeepgoingnevergiveup"
+input = "keepgoingnevergiveup"
 key = "HIT"
 print("input:", input, "key:", key)
 
 # Encryption
-# I = J
+# J = I
 key = key.upper().replace('J', 'I')
 newKey = ""
 for char in key:
@@ -25,7 +25,8 @@ for char in temp:
 playfairKey['J'] = playfairKey['I']
 playfairKeyInverse = [i for i in range(25)]
 for k, v in playfairKey.items():
-    playfairKeyInverse[v] = k
+    if k != 'J':
+        playfairKeyInverse[v] = k
 # print(playfairKey)
 # for i in range(5):
 #     for j in range(5):
@@ -47,13 +48,36 @@ while index < len(input):
 # print(newInput)
 encryption = ""
 for string in newInput:
-    firstIndex = [playfairKey[string[0]] // 5, playfairKey[string[0]] % 5]
-    secondIndex = [playfairKey[string[1]] // 5, playfairKey[string[1]] % 5]
-    if firstIndex[0] != secondIndex[0] and firstIndex[1] != secondIndex[1]:
-        encryption += playfairKeyInverse[firstIndex[0] * 5 + secondIndex[1]] + playfairKeyInverse[firstIndex[1] * 5 + secondIndex[0]]
-    elif firstIndex[1] == secondIndex[1]:
-        encryption += playfairKeyInverse[(firstIndex[0] + 1) % 5 * 5 + firstIndex[1]] + playfairKeyInverse[(secondIndex[1] + 1) % 5 * 5 + firstIndex[0]]
+    first = [playfairKey[string[0]] // 5, playfairKey[string[0]] % 5]
+    second = [playfairKey[string[1]] // 5, playfairKey[string[1]] % 5]
+    if first[0] != second[0] and first[1] != second[1]:
+        encryption += playfairKeyInverse[first[0] * 5 + second[1]]
+        encryption += playfairKeyInverse[second[0] * 5 + first[1]]
+    elif first[1] == second[1]:
+        encryption += playfairKeyInverse[(first[0] + 1) % 5 * 5 + first[1]]
+        encryption += playfairKeyInverse[(second[0] + 1) % 5 * 5 + second[1]]
     else:
-        encryption += playfairKeyInverse[firstIndex[0] * 5 + (firstIndex[1] + 1) % 5] + playfairKeyInverse[firstIndex[0] * 5 + (secondIndex[1] + 1) % 5]
+        encryption += playfairKeyInverse[first[0] * 5 + (first[1] + 1) % 5]
+        encryption += playfairKeyInverse[second[0] * 5 + (second[1] + 1) % 5]
 print(encryption)
 # Decryption
+decryption = ""
+for index in range(0, len(encryption), 2):
+    first = [playfairKey[encryption[index]] // 5]
+    first.append(playfairKey[encryption[index]] % 5)
+    second = [playfairKey[encryption[index + 1]] // 5]
+    second.append(playfairKey[encryption[index + 1]] % 5)
+    if first[0] != second[0] and first[1] != second[1]:
+        decryption += playfairKeyInverse[first[0] * 5 + second[1]]
+        decryption += playfairKeyInverse[second[0] * 5 + first[1]]
+    elif first[1] == second[1]:
+        decryption += playfairKeyInverse[(first[0] + 4) % 5 * 5 + first[1]]
+        decryption += playfairKeyInverse[(second[0] + 4) % 5 * 5 + second[1]]
+    else:
+        decryption += playfairKeyInverse[first[0] * 5 + (first[1] + 4) % 5]
+        decryption += playfairKeyInverse[second[0] * 5 + (second[1] + 4) % 5]
+print(decryption)
+
+# Question:
+# How to know it is I or J?
+# How to remove X?
