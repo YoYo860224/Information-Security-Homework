@@ -1,23 +1,35 @@
-input = "keepgoingnevergiveup"
-key = {'z': 'M', 'y': 'N', 'x': 'B', 'w': 'V', 'v': 'C', 'u': 'X',
-       't': 'Z', 's': 'L', 'r': 'K', 'q': 'J', 'p': 'H', 'o': 'G', 'n': 'F'}
-key.update({'m': 'D', 'l': 'S', 'k': 'A', 'j': 'P', 'i': 'O', 'h': 'I',
-            'g': 'U', 'f': 'Y', 'e': 'T', 'd': 'R', 'c': 'E', 'b': 'W', 'a': 'Q'})
+# Example :
+# Plaintext = "keepgoingnevergiveup"
+# key = "z:M, y:N, x:B, w:V, v:C, u:X, t:Z, s:L, r:K, q:J, p:H, o:G, n:F, m:D, l:S, k:A, j:P, i:O, h:I, g:U, f:Y, e:T, d:R, c:E, b:W, a:Q"
 
-print("input:", input, "key:", key)
 
-# Encryption
-encryption = ""
-for char in input:
-    encryption += key[char.lower()]
-print("encryption:", encryption)
-# Decryption
-inverseKey = {}
-for elementKey, element in key.items():
-    inverseKey[element] = elementKey
-# print(inverseKey)
+class Monoalphabetic:
+    def Encryption(self):
+        plaintext = input("Plese Enter the plaintext: ")
+        key = input("Please Enter the key(format => z:M, y:N...): ")
+        keyDict = {}
+        for string in key.replace(' ', '').split(','):
+            temp = string.split(':')
+            keyDict.update({temp[0].upper(): temp[1].upper()})
+        encryption = ""
+        for char in plaintext.upper():
+            encryption += keyDict[char]
+        print("encryption:", encryption)
 
-decryption = ""
-for char in encryption:
-    decryption += inverseKey[char.upper()].upper()
-print("decryption:", decryption)
+    def Decryption(self):
+        cipherText = input("Plese Enter the cipherText: ")
+        key = input("Please Enter the key(format => z:M, y:N...): ")
+        keyDict = {}
+        for string in key.replace(' ', '').split(','):
+            temp = string.split(':')
+            keyDict.update({temp[1].upper(): temp[0].upper()})
+        decryption = ""
+        for char in cipherText.upper():
+            decryption += keyDict[char]
+        print("decryption:", decryption)
+
+
+cipher = Monoalphabetic()
+cipher.Encryption()
+print()
+cipher.Decryption()
