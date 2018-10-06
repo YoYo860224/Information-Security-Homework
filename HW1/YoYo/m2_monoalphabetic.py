@@ -13,10 +13,10 @@ class Monoalphabetic():
         for letter in plaintext.lower():
             transLetter = monoMap[letter]
             ciphertext += transLetter
-
+            
         return ciphertext
 
-    def Decryption(self, cipertext):
+    def Decryption(self, ciphertext):
         # Make map
         monoMap = {}
         for i in range(26):
@@ -24,7 +24,7 @@ class Monoalphabetic():
 
         # Decryption
         plaintext = ""
-        for letter in cipertext.upper():
+        for letter in ciphertext.upper():
             transLetter = monoMap[letter]
             plaintext += transLetter
 
@@ -34,9 +34,9 @@ def main():
     key = "zyxwvutsrqponmlkjihgfedcbaMNBVCXZLKJHGFDSAPOIUYTREWQ"
     method = Monoalphabetic(key)
     plaintext = 'keepgoingnevergiveup'
-    cipertext = method.Encryption(plaintext)
-    print(cipertext)
-    print(method.Decryption(cipertext))
+    ciphertext = method.Encryption(plaintext)
+    print(ciphertext)
+    print(method.Decryption(ciphertext))
 
 if __name__ == '__main__':
     main()

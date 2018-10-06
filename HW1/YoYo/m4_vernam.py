@@ -16,15 +16,15 @@ class Vernam():
 
         return ciphertext
 
-    def Decryption(self, cipertext):
+    def Decryption(self, ciphertext):
         # Make autokey
-        cipertext = cipertext.upper()
+        ciphertext = ciphertext.upper()
         autokey = self.key.upper()
 
         # Decryption
         plaintext = ""
-        for i in range(len(cipertext)):
-            xorId = (ord(autokey[i]) - ord('A')) ^ (ord(cipertext[i]) - ord('A'))
+        for i in range(len(ciphertext)):
+            xorId = (ord(autokey[i]) - ord('A')) ^ (ord(ciphertext[i]) - ord('A'))
             plaintext += chr(ord('A') + xorId)
             autokey += chr(ord('A') + xorId)
             
@@ -34,9 +34,9 @@ def main():
     key = "CON" 
     method = Vernam(key)
     plaintext = 'keepgoingnevergiveup'
-    cipertext = method.Encryption(plaintext)
-    print(cipertext)
-    print(method.Decryption(cipertext))
+    ciphertext = method.Encryption(plaintext)
+    print(ciphertext)
+    print(method.Decryption(ciphertext))
 
 if __name__ == '__main__':
     main()

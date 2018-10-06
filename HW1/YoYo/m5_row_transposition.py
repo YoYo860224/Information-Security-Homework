@@ -36,9 +36,9 @@ def main():
     
     method = RowTransposition(key)
     plaintext = 'keepgoingnevergiveup'
-    cipertext = method.Encryption(plaintext)
-    print(cipertext)
-    print(method.Decryption(cipertext))
+    ciphertext = method.Encryption(plaintext)
+    print(ciphertext)
+    print(method.Decryption(ciphertext))
 
 if __name__ == '__main__':
     main()

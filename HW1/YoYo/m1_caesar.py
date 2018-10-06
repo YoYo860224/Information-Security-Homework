@@ -8,23 +8,25 @@ class Caesar():
             shift = (ord(letter) - ord('A') + self.key) % 26
             transLetter = chr(ord('A') + shift)
             ciphertext += transLetter
+
         return ciphertext
 
-    def Decryption(self, cipertext):
+    def Decryption(self, ciphertext):
         plaintext = ""
-        for letter in cipertext.lower():
+        for letter in ciphertext.lower():
             shift = (ord(letter) - ord('a') - self.key) % 26
             transLetter = chr(ord('a') + shift)
             plaintext += transLetter
+            
         return plaintext
 
 def main(): 
     key = 7 
     method = Caesar(key)
     plaintext = 'keepgoingnevergiveup'
-    cipertext = method.Encryption(plaintext)
-    print(cipertext)
-    print(method.Decryption(cipertext))
+    ciphertext = method.Encryption(plaintext)
+    print(ciphertext)
+    print(method.Decryption(ciphertext))
 
 if __name__ == '__main__':
     main()

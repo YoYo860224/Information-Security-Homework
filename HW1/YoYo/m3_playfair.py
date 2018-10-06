@@ -51,7 +51,7 @@ class Playfair():
        
         return ciphertext
 
-    def Decryption(self, cipertext):
+    def Decryption(self, ciphertext):
         # Make table as string
         pfTable = ""
         for i in range(26):
@@ -63,10 +63,10 @@ class Playfair():
 
         # Porcess plaintext
         plainGroup = []
-        while cipertext != "":
-            thisGroup = cipertext[:2]
+        while ciphertext != "":
+            thisGroup = ciphertext[:2]
             plainGroup.append(thisGroup)
-            cipertext = cipertext[2:]
+            ciphertext = ciphertext[2:]
 
         # Decryption
         ciphertext = ""
@@ -92,9 +92,9 @@ def main():
     method = Playfair(key)
     plaintext = 'keepgoingnevergiveup'
                  
-    cipertext = method.Encryption(plaintext)
-    print(cipertext)
-    print(method.Decryption(cipertext))
+    ciphertext = method.Encryption(plaintext)
+    print(ciphertext)
+    print(method.Decryption(ciphertext))
 
 if __name__ == '__main__':
     main()
