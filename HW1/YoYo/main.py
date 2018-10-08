@@ -8,8 +8,8 @@ from m6_product import Product
 
 def main():
     if len(sys.argv) < 4:
-        print('Usage: ./main.py -e <method> <plaintext>')
-        print('Usage: ./main.py -d <method> <ciphertext>')
+        print('Usage: -e <plaintext> <method>')
+        print('Usage: -d <ciphertext> <method>')
         print('<method>:')
         print('\t1.Caesar')
         print('\t2.Monoalphabetic')
@@ -20,48 +20,48 @@ def main():
         return
 
     deOrEn = sys.argv[1]
-    inputMethod = sys.argv[2]
-    text = sys.argv[3]
+    text = sys.argv[2]
+    inputMethod = sys.argv[3]
     
     if deOrEn == '-e':
         if inputMethod == "1":
-            key = input("input key (ex. '1'):")
+            key = input("input key (ex. '7'):\n")
             print(Caesar(int(key)).Encryption(text))
         elif inputMethod == "2":
-            key = input("input key (ex. 'zyxwvutsrqponmlkjihgfedcbaMNBVCXZLKJHGFDSAPOIUYTREWQ'):")
+            key = input("input key (ex. 'zyxwvutsrqponmlkjihgfedcbaMNBVCXZLKJHGFDSAPOIUYTREWQ'):\n")
             print(Monoalphabetic(key).Encryption(text))
         elif inputMethod == "3":
-            key = input("input key (ex. 'HIT'):")
+            key = input("input key (ex. 'HIT'):\n")
             print(Playfair(key).Encryption(text))
         elif inputMethod == "4":
-            key = input("input key (ex. 'CON'):")
+            key = input("input key (ex. 'CON'):\n")
             print(Vernam(key).Encryption(text))
         elif inputMethod == "5":
-            key = input("input key (ex. '31562487'):")
+            key = input("input key (ex. '31562487'):\n")
             print(RowTransposition(key).Encryption(text))
         elif inputMethod == "6":
-            key = input("Input key (ex. '1 2 3'):\n")
-            transport = input("Input transport (ex. '3 2 1'):\n")
+            key = input("input key (ex. '01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20'):\n")
+            transport = input("Input transport (ex. '15 11 19 18 16 03 07 14 02 20 04 12 09 06 01 05 17 13 10 08'):\n")
             print(Product(key, transport).Encryption(text))
     elif deOrEn.lower() == '-d':
         if inputMethod == "1":
-            key = input("input key (ex. '1'):")
+            key = input("input key (ex. '7'):\n")
             print(Caesar(int(key)).Decryption(text))
         elif inputMethod == "2":
-            key = input("input key (ex. 'zyxwvutsrqponmlkjihgfedcbaMNBVCXZLKJHGFDSAPOIUYTREWQ'):")
+            key = input("input key (ex. 'zyxwvutsrqponmlkjihgfedcbaMNBVCXZLKJHGFDSAPOIUYTREWQ'):\n")
             print(Monoalphabetic(key).Decryption(text))
         elif inputMethod == "3":
-            key = input("input key (ex. 'HIT'):")
+            key = input("input key (ex. 'HIT'):\n")
             print(Playfair(key).Decryption(text))
         elif inputMethod == "4":
-            key = input("input key (ex. 'CON'):")
+            key = input("input key (ex. 'CON'):\n")
             print(Vernam(key).Decryption(text))
         elif inputMethod == "5":
-            key = input("input key (ex. '31562487'):")
+            key = input("input key (ex. '31562487'):\n")
             print(RowTransposition(key).Decryption(text))
         elif inputMethod == "6":
-            key = input("Input key (ex. '1 2 3'):\n")
-            transport = input("Input transport (ex. '3 2 1'):\n")
+            key = input("input key (ex. '01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20'):\n")
+            transport = input("Input transport (ex. '15 11 19 18 16 03 07 14 02 20 04 12 09 06 01 05 17 13 10 08'):\n")
             print(Product(key, transport).Decryption(text))
 
 if __name__ == '__main__':

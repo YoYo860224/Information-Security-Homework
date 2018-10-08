@@ -11,7 +11,6 @@ class Vernam():
         ciphertext = ""
         for i in range(len(plaintext)):
             xorId = (ord(autokey[i]) - ord('A')) ^ (ord(plaintext[i]) - ord('A'))
-            
             ciphertext += chr(ord('A') + xorId)
 
         return ciphertext
