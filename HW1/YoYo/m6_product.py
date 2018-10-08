@@ -7,14 +7,12 @@ class Product():
         # Make Key Info
         keyList = self.key.split(' ')
         tranList = self.transport.split(' ')
-        
+
         # Encryption
-        ciphertextList = [''] * len(plaintext)
-        for i in range(len(plaintext)):
-            rounds = i // len(keyList)
-            order = i % len(keyList)
-            pos = tranList.index(keyList[order])
-            ciphertextList[i] = plaintext[rounds * len(keyList) + pos]
+        ciphertextList = [''] * len(keyList)
+        for i in range(len(keyList)):
+            pos = tranList.index(keyList[i])
+            ciphertextList[pos] = plaintext[i]
         ciphertext = ''.join(ciphertextList)
 
         return ciphertext
@@ -25,12 +23,10 @@ class Product():
         tranList = self.transport.split(' ')
         
         # Encryption
-        plaintextList = [''] * len(ciphertext)
-        for i in range(len(ciphertext)):
-            rounds = i // len(keyList)
-            order = i % len(keyList)
-            pos = keyList.index(tranList[order])
-            plaintextList[i] = ciphertext[rounds * len(keyList) + pos]
+        plaintextList = [''] * len(keyList)
+        for i in range(len(keyList)):
+            pos = keyList.index(tranList[i])
+            plaintextList[pos] = ciphertext[i]
         plaintext = ''.join(plaintextList)
 
         return plaintext
