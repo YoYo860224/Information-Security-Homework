@@ -36,11 +36,15 @@ class Playfair:
                 encryption += playfairKeyInverse[first[0] * 5 + second[1]]
                 encryption += playfairKeyInverse[second[0] * 5 + first[1]]
             elif first[1] == second[1]:
-                encryption += playfairKeyInverse[(first[0] + 1) % 5 * 5 + first[1]]
-                encryption += playfairKeyInverse[(second[0] + 1) % 5 * 5 + second[1]]
+                encryption += playfairKeyInverse[(first[0] + 1) %
+                                                 5 * 5 + first[1]]
+                encryption += playfairKeyInverse[(second[0] + 1) %
+                                                 5 * 5 + second[1]]
             else:
-                encryption += playfairKeyInverse[first[0] * 5 + (first[1] + 1) % 5]
-                encryption += playfairKeyInverse[second[0] * 5 + (second[1] + 1) % 5]
+                encryption += playfairKeyInverse[first[0]
+                                                 * 5 + (first[1] + 1) % 5]
+                encryption += playfairKeyInverse[second[0]
+                                                 * 5 + (second[1] + 1) % 5]
         print("encryption:", encryption)
 
     def Decryption(self):
@@ -49,7 +53,7 @@ class Playfair:
         # Process key to playfair key table
         playfairKey = {}
         index = 0
-        for char in (key.join([chr(i + ord('A')) for i in range(26)])).replace('J', 'I'):
+        for char in (key + ''.join([chr(i + ord('A')) for i in range(26)])).replace('J', 'I'):
             if char not in playfairKey.keys():
                 playfairKey[char] = [index // 5, index % 5]
                 index += 1
@@ -67,11 +71,15 @@ class Playfair:
                 decryption += playfairKeyInverse[first[0] * 5 + second[1]]
                 decryption += playfairKeyInverse[second[0] * 5 + first[1]]
             elif first[1] == second[1]:
-                decryption += playfairKeyInverse[(first[0] + 4) % 5 * 5 + first[1]]
-                decryption += playfairKeyInverse[(second[0] + 4) % 5 * 5 + second[1]]
+                decryption += playfairKeyInverse[(first[0] + 4) %
+                                                 5 * 5 + first[1]]
+                decryption += playfairKeyInverse[(second[0] + 4) %
+                                                 5 * 5 + second[1]]
             else:
-                decryption += playfairKeyInverse[first[0] * 5 + (first[1] + 4) % 5]
-                decryption += playfairKeyInverse[second[0] * 5 + (second[1] + 4) % 5]
+                decryption += playfairKeyInverse[first[0]
+                                                 * 5 + (first[1] + 4) % 5]
+                decryption += playfairKeyInverse[second[0]
+                                                 * 5 + (second[1] + 4) % 5]
         print("decryption:", decryption)
 
 
