@@ -1,12 +1,7 @@
-# Example :
-# Plaintext = "keepgoingnevergiveup"
-# key = "HIT"
-
-
 class Playfair:
-    def Encryption(self):
-        plaintext = input("Plese Enter the plaintext: ")
-        key = input("Please Enter the key: ").upper()
+    def Encryption(self, plaintext, key):
+        plaintext = plaintext.upper()
+        key = key.upper()
         # Process key to playfair key table
         playfairKey = {}
         index = 0
@@ -21,12 +16,14 @@ class Playfair:
                 playfairKeyInverse[val[0] * 5 + val[1]] = char
         # Add X to plaintext when two letter is same
         newPlaintext = ""
-        for char in plaintext.upper():
-            if newPlaintext[:1] == char:
-                newPlaintext += 'X'
-            newPlaintext += char
-        if len(newPlaintext) % 2 != 0:
-            newPlaintext += 'X'
+        index = 0
+        while index < len(plaintext):
+            if index + 1 == len(plaintext) or plaintext[index] == plaintext[index + 1]:
+                newPlaintext += plaintext[index] + 'X'
+                index += 1
+            else:
+                newPlaintext += plaintext[index] + plaintext[index + 1]
+                index += 2
         # Encryption
         encryption = ""
         for index in range(0, len(newPlaintext), 2):
@@ -36,20 +33,15 @@ class Playfair:
                 encryption += playfairKeyInverse[first[0] * 5 + second[1]]
                 encryption += playfairKeyInverse[second[0] * 5 + first[1]]
             elif first[1] == second[1]:
-                encryption += playfairKeyInverse[(first[0] + 1) %
-                                                 5 * 5 + first[1]]
-                encryption += playfairKeyInverse[(second[0] + 1) %
-                                                 5 * 5 + second[1]]
+                encryption += playfairKeyInverse[(first[0] + 1) % 5 * 5 + first[1]]
+                encryption += playfairKeyInverse[(second[0] + 1) % 5 * 5 + second[1]]
             else:
-                encryption += playfairKeyInverse[first[0]
-                                                 * 5 + (first[1] + 1) % 5]
-                encryption += playfairKeyInverse[second[0]
-                                                 * 5 + (second[1] + 1) % 5]
-        print("encryption:", encryption)
+                encryption += playfairKeyInverse[first[0] * 5 + (first[1] + 1) % 5]
+                encryption += playfairKeyInverse[second[0] * 5 + (second[1] + 1) % 5]
+        return encryption
 
-    def Decryption(self):
-        cipherText = input("Plese Enter the cipherText: ")
-        key = input("Please Enter the key: ").upper()
+    def Decryption(self, cipherText, key):
+        key = key.upper()
         # Process key to playfair key table
         playfairKey = {}
         index = 0
@@ -71,19 +63,9 @@ class Playfair:
                 decryption += playfairKeyInverse[first[0] * 5 + second[1]]
                 decryption += playfairKeyInverse[second[0] * 5 + first[1]]
             elif first[1] == second[1]:
-                decryption += playfairKeyInverse[(first[0] + 4) %
-                                                 5 * 5 + first[1]]
-                decryption += playfairKeyInverse[(second[0] + 4) %
-                                                 5 * 5 + second[1]]
+                decryption += playfairKeyInverse[(first[0] + 4) % 5 * 5 + first[1]]
+                decryption += playfairKeyInverse[(second[0] + 4) % 5 * 5 + second[1]]
             else:
-                decryption += playfairKeyInverse[first[0]
-                                                 * 5 + (first[1] + 4) % 5]
-                decryption += playfairKeyInverse[second[0]
-                                                 * 5 + (second[1] + 4) % 5]
-        print("decryption:", decryption)
-
-
-cipher = Playfair()
-cipher.Encryption()
-print()
-cipher.Decryption()
+                decryption += playfairKeyInverse[first[0] * 5 + (first[1] + 4) % 5]
+                decryption += playfairKeyInverse[second[0] * 5 + (second[1] + 4) % 5]
+        return decryption.lower()
