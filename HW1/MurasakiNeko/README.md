@@ -9,7 +9,7 @@
 
 ## 建置環境
 
-- Python 3.6.5 :: Anaconda, Inc. on windows 10
+- Python 3.7.0 :: Anaconda, Inc. on windows 10
 
 ## 使用方式
 
