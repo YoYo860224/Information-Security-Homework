@@ -13,7 +13,7 @@
 
 ## 使用方式
 
-- 命令列輸入 `main.exe -d <ciphertext> <method>`
+- 命令列輸入 `main.exe -d <ciphertext> <method>` or `python main.py-d <ciphertext> <method>`
   ```
   <method>:
           1.Caesar
@@ -23,7 +23,8 @@
           5.RowTransposition
           6.Product
   ```
-- 之後依據方法輸入各種 key
+
+* 之後依據方法輸入各種 key
 
 ## 截圖
 

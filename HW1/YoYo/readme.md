@@ -10,7 +10,7 @@
 * Python 3.6.5 :: Anaconda, Inc. on windows 10
 
 ## 使用方式
-* 命令列輸入 ``` main.exe -d <ciphertext> <method>```
+* 命令列輸入 ``` main.exe -d <ciphertext> <method>``` or ```python main.py-d <ciphertext> <method>```
     ```
     <method>:
             1.Caesar
