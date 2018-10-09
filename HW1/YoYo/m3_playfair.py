@@ -9,7 +9,7 @@ class Playfair():
             pfTable += chr(ord('A') + i)
         for letter in self.key.upper():
             pfTable = pfTable.replace(letter, "")
-        pfTable = self.key + pfTable
+        pfTable = self.key.upper() + pfTable
         pfTable = pfTable.replace('J', "")
 
         # Porcess plaintext
