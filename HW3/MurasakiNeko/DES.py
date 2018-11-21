@@ -117,13 +117,42 @@ class DES:
                 self.__times = times + 1
                 L = bits[:32]
                 R = bits[32:]
-                foutput = self.__fFunction(R, self.__getKey())
+                foutput = self.__fFunction(R, self.__getEnKey())
                 bits = R + [L[index] ^ foutput[index] for index in range(32)]
             # Final Permutation
             bits = self.__transport(bits, self.__IPInverse)
             # ECB mode
             encryption += bits
         return encryption
+
+    def Decryption(self, ciphertext, key):
+        key = self.toBits(key)
+        # key 64 -> 56 by PC1
+        key = self.__transport(key, self.__PC1)
+        # C16 = lKey, D16 = rKey
+        self.__lKey = key[:28]
+        self.__rKey = key[28:]
+        # Every 64 bit as a pair
+        ciphertext = [(ciphertext[index:index + 8] + chr(0) * 7)[:8] for index in range(0, len(ciphertext), 8)]
+        decryption = []
+        for text in ciphertext:
+            bits = self.toBits(text)
+            # Initial Permutation
+            bits = self.__transport(bits, self.__IP)
+            for times in range(16):
+                self.__times = 17 - times
+                L = bits[:32]
+                R = bits[32:]
+                foutput = self.__fFunction(L, self.__getDeKey())
+                bits = [R[index] ^ foutput[index] for index in range(32)] + L
+            # Final Permutation
+            bits = self.__transport(bits, self.__IPInverse)
+            # ECB mode
+            decryption += bits
+            # Reset C16 D16
+            self.__lKey = key[:28]
+            self.__rKey = key[28:]
+        return decryption
 
     def __transport(self, bits, vector):
         output = []
@@ -142,7 +171,7 @@ class DES:
         bits = self.__transport(bits, self.__P)
         return bits
 
-    def __getKey(self):
+    def __getEnKey(self):
         if self.__times in [1, 2, 9, 16]:
             # Rotated left by one bit
             self.__lKey = self.__lKey[1:] + self.__lKey[:1]
@@ -154,6 +183,20 @@ class DES:
             # Selects a permuted subset of 48 bits
         return self.__transport(self.__lKey + self.__rKey, self.__PC2)
 
+    def __getDeKey(self):
+        if self.__times == 17:
+            return self.__transport(self.__lKey + self.__rKey, self.__PC2)
+        elif self.__times in [2, 9, 16]:
+            # Rotated right by one bit
+            self.__lKey = self.__lKey[-1:] + self.__lKey[:-1]
+            self.__rKey = self.__rKey[-1:] + self.__rKey[:-1]
+        else:
+            # Rotated right by two bit
+            self.__lKey = self.__lKey[-2:] + self.__lKey[:-2]
+            self.__rKey = self.__rKey[-2:] + self.__rKey[:-2]
+            # Selects a permuted subset of 48 bits
+        return self.__transport(self.__lKey + self.__rKey, self.__PC2)
+
     def __sBox(self, bits):
         output = []
         for start in range(0, 48, 6):
@@ -162,6 +205,10 @@ class DES:
             output += [int(bit) for bit in ('000000' + bin(self.__S[start // 6][row * 16 + col])[2:])[-4:]]
         return output
 
+key = "45645651"
 
 des = DES()
-print(des.Encryption("apple123456", "apple123"))
+res = des.Encryption("aaa", key)
+
+ori = des.Decryption(DES.toStr(res), key)
+print(DES.toStr(ori))
