@@ -159,7 +159,7 @@ class DES:
         for start in range(0, 48, 6):
             row = bits[start] * 2 + bits[5 + start]
             col = bits[start + 1] * 8 + bits[start + 2] * 4 + bits[start + 3] * 2 + bits[start + 4]
-            output += [int(bit) for bit in ('000000' + bin(self.__S[start // 6][row * 16 + col])[2:])[-6:]]
+            output += [int(bit) for bit in ('000000' + bin(self.__S[start // 6][row * 16 + col])[2:])[-4:]]
         return output
 
 
