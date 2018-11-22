@@ -126,6 +126,8 @@ class DES:
                 R = bits[32:]
                 foutput = self.__fFunction(R, self.__getEnKey())
                 bits = R + [L[index] ^ foutput[index] for index in range(32)]
+            # Change at last time
+            bits = bits[32:] + bits[:32]
             # Final Permutation
             bits = self.__transport(bits, self.__IPInverse)
             # ECB mode
@@ -146,6 +148,8 @@ class DES:
             bits = self.toBitArray(text)
             # Initial Permutation
             bits = self.__transport(bits, self.__IP)
+            # Change at last time
+            bits = bits[32:] + bits[:32]
             for times in range(16):
                 self.__times = 17 - times
                 L = bits[:32]
