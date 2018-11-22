@@ -82,34 +82,41 @@ class DES:
                      2, 1, 14, 7, 4, 10, 8, 13, 15, 12, 9, 0, 3, 5, 6, 11]]
 
     @staticmethod
-    def toBits(string):
+    def to64BitArray(bits):
+        # 0xffffffffffffffff0000000000000000 -> ['11111111.....', '00000000..........']
         output = []
-        for char in string:
-            bits = bin(ord(char))[2:]
-            bits = '00000000'[len(bits):] + bits
-            output.extend([int(b) for b in bits])
+        bitsStr = ('0' * 63 + bin(bits)[2:])
+        while(len(bitsStr) >= 64):
+            output = [bitsStr[-64:]] + output
+            bitsStr = bitsStr[:-64]
         return output
 
     @staticmethod
-    def toStr(bits):
-        string = []
-        for b in range(len(bits) // 8):
-            byte = bits[b * 8:(b + 1) * 8]
-            string.append(chr(int(''.join([str(bit) for bit in byte]), 2)))
-        return ''.join(string)
+    def toBitArray(bits):
+        # '10110...' -> [1, 0, 1, 1, 0, ...]
+        output = []
+        for i in bits:
+            output += [i]
+        return [int(b) for b in bits]
+
+    @staticmethod
+    def arrayToInt(bitArray):
+        # [1, 0, 1, 1, 0, ...] -> 10110...
+        binStr = ''.join([str(b) for b in bitArray])
+        return int(binStr, 2)
 
     def Encryption(self, plaintext, key):
-        key = self.toBits(key)
+        key = self.toBitArray(self.to64BitArray(key)[0])
         # key 64 -> 56 by PC1
         key = self.__transport(key, self.__PC1)
         # C0 = lKey, D0 = rKey
         self.__lKey = key[:28]
         self.__rKey = key[28:]
         # Every 64 bit as a pair
-        plaintext = [(plaintext[index:index + 8] + chr(0) * 7)[:8] for index in range(0, len(plaintext), 8)]
+        plaintexts = self.to64BitArray(plaintext)
         encryption = []
-        for text in plaintext:
-            bits = self.toBits(text)
+        for text in plaintexts:
+            bits = self.toBitArray(text)
             # Initial Permutation
             bits = self.__transport(bits, self.__IP)
             # Encryption 16 Round
@@ -123,20 +130,20 @@ class DES:
             bits = self.__transport(bits, self.__IPInverse)
             # ECB mode
             encryption += bits
-        return encryption
+        return self.arrayToInt(encryption)
 
     def Decryption(self, ciphertext, key):
-        key = self.toBits(key)
+        key = self.toBitArray(self.to64BitArray(key)[0])
         # key 64 -> 56 by PC1
         key = self.__transport(key, self.__PC1)
         # C16 = lKey, D16 = rKey
         self.__lKey = key[:28]
         self.__rKey = key[28:]
         # Every 64 bit as a pair
-        ciphertext = [(ciphertext[index:index + 8] + chr(0) * 7)[:8] for index in range(0, len(ciphertext), 8)]
+        ciphertexts = self.to64BitArray(ciphertext)
         decryption = []
-        for text in ciphertext:
-            bits = self.toBits(text)
+        for text in ciphertexts:
+            bits = self.toBitArray(text)
             # Initial Permutation
             bits = self.__transport(bits, self.__IP)
             for times in range(16):
@@ -152,7 +159,7 @@ class DES:
             # Reset C16 D16
             self.__lKey = key[:28]
             self.__rKey = key[28:]
-        return decryption
+        return self.arrayToInt(decryption)
 
     def __transport(self, bits, vector):
         output = []
@@ -205,10 +212,11 @@ class DES:
             output += [int(bit) for bit in ('000000' + bin(self.__S[start // 6][row * 16 + col])[2:])[-4:]]
         return output
 
-key = "45645651"
-
 des = DES()
-res = des.Encryption("aaa", key)
+key = 0xFFFFFFFFFFFFFFFF 
 
-ori = des.Decryption(DES.toStr(res), key)
-print(DES.toStr(ori))
+plainT = 0x0000000000000000
+cipherT = des.Encryption(plainT, key)
+print(hex(cipherT))
+ori = des.Decryption(cipherT, key)
+print(hex(ori))
