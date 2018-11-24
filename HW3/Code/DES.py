@@ -132,7 +132,7 @@ class DES:
             bits = self.__transport(bits, self.__IPInverse)
             # ECB mode
             encryption += bits
-        return self.intToBitArray(encryption)
+        return self.bitArrayToInt(encryption)
 
     def Decryption(self, ciphertext, key):
         key = self.intToBitArray(self.to64BitArray(key)[0])
