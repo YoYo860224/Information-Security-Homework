@@ -7,7 +7,7 @@ class DES:
                      60, 52, 44, 36, 28, 20, 12, 4,
                      62, 54, 46, 38, 30, 22, 14, 6,
                      64, 56, 48, 40, 32, 24, 16, 8,
-                     57, 49, 41, 33, 25, 17, 9, 1,
+                     57, 49, 41, 33, 25, 17, 9,  1,
                      59, 51, 43, 35, 27, 19, 11, 3,
                      61, 53, 45, 37, 29, 21, 13, 5,
                      63, 55, 47, 39, 31, 23, 15, 7]
@@ -18,24 +18,24 @@ class DES:
 
         self.__E = [(start + index) % 32 + 1 for start in range(-1, 28, 4) for index in range(6)]
 
-        self.__P = [16, 7, 20, 21, 29, 12, 28, 17,
-                    1, 15, 23, 26, 5, 18, 31, 10,
-                    2, 8, 24, 14, 32, 27, 3, 9,
-                    19, 13, 30, 6, 22, 11, 4, 25]
+        self.__P = [16,  7, 20, 21, 29, 12, 28, 17,
+                     1, 15, 23, 26,  5, 18, 31, 10,
+                     2,  8, 24, 14, 32, 27,  3,  9,
+                    19, 13, 30,  6, 22, 11,  4, 25]
 
-        self.__PC1 = [57, 49, 41, 33, 25, 17, 9,
-                      1, 58, 50, 42, 34, 26, 18,
-                      10, 2, 59, 51, 43, 35, 27,
-                      19, 11, 3, 60, 52, 44, 36,
+        self.__PC1 = [57, 49, 41, 33, 25, 17,  9,
+                       1, 58, 50, 42, 34, 26, 18,
+                      10,  2, 59, 51, 43, 35, 27,
+                      19, 11,  3, 60, 52, 44, 36,
                       63, 55, 47, 39, 31, 23, 15,
-                      7, 62, 54, 46, 38, 30, 22,
-                      14, 6, 61, 53, 45, 37, 29,
-                      21, 13, 5, 28, 20, 12, 4]
+                       7, 62, 54, 46, 38, 30, 22,
+                      14,  6, 61, 53, 45, 37, 29,
+                      21, 13,  5, 28, 20, 12,  4]
 
-        self.__PC2 = [14, 17, 11, 24, 1, 5,
-                      3, 28, 15, 6, 21, 10,
-                      23, 19, 12, 4, 26, 8,
-                      16, 7, 27, 20, 13, 2,
+        self.__PC2 = [14, 17, 11, 24,  1,  5,
+                       3, 28, 15,  6, 21, 10,
+                      23, 19, 12,  4, 26,  8,
+                      16,  7, 27, 20, 13,  2,
                       41, 52, 31, 37, 47, 55,
                       30, 40, 51, 45, 33, 48,
                       44, 49, 39, 56, 34, 53,
@@ -92,7 +92,7 @@ class DES:
         return output
 
     @staticmethod
-    def toBitArray(bits):
+    def intToBitArray(bits):
         # '10110...' -> [1, 0, 1, 1, 0, ...]
         output = []
         for i in bits:
@@ -100,13 +100,13 @@ class DES:
         return [int(b) for b in bits]
 
     @staticmethod
-    def arrayToInt(bitArray):
+    def bitArrayToInt(bitArray):
         # [1, 0, 1, 1, 0, ...] -> 10110...
         binStr = ''.join([str(b) for b in bitArray])
         return int(binStr, 2)
 
     def Encryption(self, plaintext, key):
-        key = self.toBitArray(self.to64BitArray(key)[0])
+        key = self.intToBitArray(self.to64BitArray(key)[0])
         # key 64 -> 56 by PC1
         key = self.__transport(key, self.__PC1)
         # C0 = lKey, D0 = rKey
@@ -116,7 +116,7 @@ class DES:
         plaintexts = self.to64BitArray(plaintext)
         encryption = []
         for text in plaintexts:
-            bits = self.toBitArray(text)
+            bits = self.intToBitArray(text)
             # Initial Permutation
             bits = self.__transport(bits, self.__IP)
             # Encryption 16 Round
@@ -132,10 +132,10 @@ class DES:
             bits = self.__transport(bits, self.__IPInverse)
             # ECB mode
             encryption += bits
-        return self.arrayToInt(encryption)
+        return self.intToBitArray(encryption)
 
     def Decryption(self, ciphertext, key):
-        key = self.toBitArray(self.to64BitArray(key)[0])
+        key = self.intToBitArray(self.to64BitArray(key)[0])
         # key 64 -> 56 by PC1
         key = self.__transport(key, self.__PC1)
         # C16 = lKey, D16 = rKey
@@ -145,7 +145,7 @@ class DES:
         ciphertexts = self.to64BitArray(ciphertext)
         decryption = []
         for text in ciphertexts:
-            bits = self.toBitArray(text)
+            bits = self.intToBitArray(text)
             # Initial Permutation
             bits = self.__transport(bits, self.__IP)
             # Change at last time
@@ -163,7 +163,7 @@ class DES:
             # Reset C16 D16
             self.__lKey = key[:28]
             self.__rKey = key[28:]
-        return self.arrayToInt(decryption)
+        return self.bitArrayToInt(decryption)
 
     def __transport(self, bits, vector):
         output = []
