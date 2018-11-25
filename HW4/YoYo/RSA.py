@@ -28,10 +28,8 @@ def modInv(a, m):
     else:
         raise Exception('modular inverse does not exist')
 
-def GetRSAKey():
+def GetRSAKey(p, q):
     # 選兩個大質數
-    p = 71
-    q = 83
     N = p * q
 
     # phi(N) = r = (p - 1) * (q - 1)
