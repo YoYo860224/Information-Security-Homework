@@ -1,12 +1,13 @@
 import sys
 import RSA
 import RandPrime
+import random
 
 def main():
     # p = 71
     # q = 83
-    p = RandPrime.RandomPrime()
-    q = RandPrime.RandomPrime()
+    p = RandPrime.RandomPrime(256)
+    q = RandPrime.RandomPrime(257)
     print(p, q)
     N, e, d = RSA.GetRSAKey(p, q)
     print(N.bit_length())

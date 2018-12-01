@@ -5,6 +5,7 @@ def __MLTest(n):
         return False
     if n==2 or n==3 or n==5 or n==7:
         return True
+
     # 引述定理
     #  x^2 =   1 (mod p)
     #   x  = +-1 (mod p)
@@ -40,8 +41,8 @@ def __MLTest(n):
  
     return True
 
-def RandomPrime():
-    n = random.randrange(pow(2, 200), pow(2, 210))
+def RandomPrime(nOfBit):
+    n = random.randrange(pow(2, nOfBit - 1), pow(2, nOfBit))
     while(__MLTest(n) != True):
-        n = random.randrange(pow(2, 200), pow(2, 210))
+        n = random.randrange(pow(2, nOfBit - 1), pow(2, nOfBit))
     return n
