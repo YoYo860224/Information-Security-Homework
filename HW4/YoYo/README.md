@@ -7,6 +7,7 @@
 ## 使用方式
 
 * 命令列輸入 ```python main.py -init <NumOfBit>``` 建立 RSA key 相關資訊，無輸入```<NumOfBit>``` 預設為 1024 bit
+* 命令列輸入 ```python main.py -init <prime1> <prime2>``` 用質數建立 RSA key 相關資訊
 * 命令列輸入 ```python main.py -e <text> <N> <key> ``` 使用加密
 * 命令列輸入 ```python main.py -d <text> <N> <key> ``` 使用解密
 * 命令列輸入 ```python main.py -d <text> <N> <key> <p> <q>``` 快速解密
@@ -31,4 +32,5 @@
 * 實作中國餘式定理時，因取 mod 自己筆記的方式有點不樣，導致公式有點錯亂，算出錯誤的值
 
 ## 截圖
+![resultOfTest](./ResultOfTest.png)
 ![result](./Result.png)

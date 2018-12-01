@@ -7,6 +7,7 @@ def printUsage():
     print('Please input Hex.')
     print('Usage: -init')
     print('Usage: -init <NumOfBit>')
+    print('Usage: -init <prime1> <prime2>')
     print('Usage: -e <plaintext> <N> <key>')
     print('Usage: -e <plaintext> <N> <key> <p> <q>')
     print('Usage: -d <ciphertext> <N> <key>')
@@ -18,10 +19,19 @@ def main():
         return
     
     if sys.argv[1] == '-init':
-        needBits = 1024
+        p = 0
+        q = 0
+        N = 0
+        e = 0
+        d = 0
+        if len(sys.argv) == 2:
+            N, e, d, p, q = RSA.GetRSAKeyByBit(1024)
         if len(sys.argv) == 3:
-            needBits = int(sys.argv[2])
-        N, e, d, p, q = RSA.GetRSAKeyByBit(needBits)
+            N, e, d, p, q = RSA.GetRSAKeyByBit(int(sys.argv[2]))
+        if len(sys.argv) == 4:
+            p = int(sys.argv[2], 16)
+            q = int(sys.argv[3], 16)
+            N, e, d = RSA.GetRSAKeyByPrime(p, q)
         print()
         print('p = ', hex(p))
         print('q = ', hex(q))
