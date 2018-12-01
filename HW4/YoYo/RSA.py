@@ -1,4 +1,5 @@
 import math
+from SquareAndMultiply import SAMpow
 
 def egcd(a, b):
     # return (gcd, x, y)
@@ -58,7 +59,7 @@ def GetRSAKey(p, q):
 # 因為(mod N) 的關係  明文密文限制在 N 以下的值
 def RSA(message, N, key):
     if message < N:
-        return pow(message, key, N)
+        return SAMpow(message, key, N)
     else:
         raise Exception('message >= N')
 

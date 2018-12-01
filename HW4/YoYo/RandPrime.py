@@ -1,4 +1,6 @@
 import random
+from SquareAndMultiply import SAMpow
+
 def __MLTest(n):
     # 必然的，Miller–Rabin 不處理 
     if n==0 or n==1 or n==4 or n==6 or n==8 or n==9:
@@ -27,9 +29,9 @@ def __MLTest(n):
 
     def EulerTry(a):
         for i in range(s):
-            if pow(a, d, n) == 1:
+            if SAMpow(a, d, n) == 1:
                 return True
-            if pow(a, 2**i * d, n) == -1:
+            if SAMpow(a, 2**i * d, n) == -1:
                 return True
         return False
     
@@ -42,7 +44,9 @@ def __MLTest(n):
     return True
 
 def RandomPrime(nOfBit):
-    n = random.randrange(pow(2, nOfBit - 1), pow(2, nOfBit))
+    leftLimit = pow(2, nOfBit - 1)
+    rightLimit = pow(2, nOfBit)
+    n = random.randrange(leftLimit, rightLimit)
     while(__MLTest(n) != True):
-        n = random.randrange(pow(2, nOfBit - 1), pow(2, nOfBit))
+        n = random.randrange(leftLimit, rightLimit)
     return n
