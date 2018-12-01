@@ -1,4 +1,5 @@
 import math
+import RandPrime
 from SquareAndMultiply import SAMpow
 
 def egcd(a, b):
@@ -29,7 +30,7 @@ def modInv(a, m):
     else:
         raise Exception('modular inverse does not exist')
 
-def GetRSAKey(p, q):
+def GetRSAKeyByPrime(p, q):
     # 選兩個大質數
     N = p * q
 
@@ -47,6 +48,15 @@ def GetRSAKey(p, q):
     d = modInv(e, r)
     return N, e, d
 
+def GetRSAKeyByBit(NumOfBit):
+    oneOfThat = NumOfBit // 2
+    p = RandPrime.RandomPrime(oneOfThat)
+    q = RandPrime.RandomPrime(oneOfThat + 1)
+
+    N, e, d = GetRSAKeyByPrime(p, q)
+
+    return N, e, d, p, q
+
 # 加解密過程
 # 明文 p, 密文 c
 # c = p^e (mod N)
@@ -56,14 +66,15 @@ def GetRSAKey(p, q):
     #   = p^(phi(N))^n * p  (mod N)
     #   = 1^n * p           (mod N)
     #   = p
-# 因為(mod N) 的關係  明文密文限制在 N 以下的值
+# 因為(mod N) 的關係  明文密文限制在 N bits 以下的值
+
 def RSA(message, N, key):
     if message < N:
         return SAMpow(message, key, N)
     else:
         raise Exception('message >= N')
 
-def RSAbyCRT(message, p, q, N, key):
+def RSAbyCRT(message, N, key, p, q):
     # CRT: 中國餘式定理
     # x % m1 = a1
     # x % m2 = a2
@@ -95,6 +106,6 @@ def RSAbyCRT(message, p, q, N, key):
     m2 = q
     M1 = m2
     M2 = m1
-    t1 = modInv(m1, M1)
-    t2 = modInv(m2, M2)
-    return (a1 * t1 * M2 + a2 * t2 * m1) % N
+    t1 = modInv(M1, m1)
+    t2 = modInv(M2, m2)
+    return (a1 * t1 * M1 + a2 * t2 * M2) % N
