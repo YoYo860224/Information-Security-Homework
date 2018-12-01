@@ -63,8 +63,38 @@ def RSA(message, N, key):
     else:
         raise Exception('message >= N')
 
+def RSAbyCRT(message, p, q, N, key):
+    # CRT: 中國餘式定理
+    # x % m1 = a1
+    # x % m2 = a2
+    # M = m1 * m2
+    # M1 = m2
+    # M2 = m1
+    # 求 ti, 使 ti * Mi % mi = 1
+    # x = a1 * t1 * M1 + a2 * t2 * M2 + kM
 
+    # CRT in RSA
+    # plain = message ^ key % N
+    # 令 a1 = message ^ key % p
+    # 令 a2 = message ^ key % q
+        # a1, a2 可用歐拉定理加速運算
+        # m ^ k % p
+        # => m ^ (n * (p-1) + r) % p
+        # => m ^ (n * (p-1)) % p * m ^ r % p
+        # => m ^ r % p
+        # 其中 r = k % (p-1)
+    a1 = SAMpow(message, key % (p-1), p)
+    a2 = SAMpow(message, key % (q-1), q)
 
-
-
-
+    # 最後運用中國餘式定理求 plain
+    # x % p = a1
+    # x % q = a2
+    # M = p * q = N
+    # plain = x % M, 最小 x 解
+    m1 = p
+    m2 = q
+    M1 = m2
+    M2 = m1
+    t1 = modInv(m1, M1)
+    t2 = modInv(m2, M2)
+    return (a1 * t1 * M2 + a2 * t2 * m1) % N
