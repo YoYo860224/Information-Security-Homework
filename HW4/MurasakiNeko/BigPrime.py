@@ -34,7 +34,7 @@ class BigPrime:
     def makePrime(bits):
         while True:
             N = pow(2, bits - 1) + 1
-            for times in range(1, bits - 2):
+            for times in range(1, bits - 1):
                 N += 0 if random.random() < 0.5 else pow(2, times)
             if BigPrime.__isPrime(N):
                 return N
