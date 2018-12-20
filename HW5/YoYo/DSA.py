@@ -1,5 +1,7 @@
+import sys
 import random
 import hashlib
+
 
 class MyMath:
     @staticmethod
@@ -89,13 +91,13 @@ class DSA:
         self.p = 59
         self.q = 29
         self.a = 3
-        self.d = 7
-        self.b = 4
+        self.priKey = 7
+        self.pubKey = 4
         # self.p = 89884656743115795386465259539451236680898848947115328636715040578866337902750481566354238661203768010560056939935696678829394884407208311246423715319737062188883946712432742638151109800623047059726541476042502884419075341171231440736956555270413618581675256883102724335589335116634917631823889786020221276369
         # self.q = 1316000349009119659071359514621645125183937169577
         # self.a = 56962729350251973072708382160355230095382064032784692675006372684462035899723600096683758707292589475121840430732234527069546417885198143182896607336977575805236807499700705236608617345163308231760635948742924569924028084203642909225044133517132906090032989138823786726484233105901884598823767668031189916389
-        # self.d = 47609914610636033929406820546224972605051023098723817782349104073685062182246497982236599682201955315532468925665905325103972391172455099216151279150254836536208371866402962899500072691271661330984147691593546427217421397533210839275244949838177355281696530474518752051997486519324535433564421900113710867510
-        # self.b = 1102568376356344783630926367745025260170829125728
+        # self.priKey = 47609914610636033929406820546224972605051023098723817782349104073685062182246497982236599682201955315532468925665905325103972391172455099216151279150254836536208371866402962899500072691271661330984147691593546427217421397533210839275244949838177355281696530474518752051997486519324535433564421900113710867510
+        # self.pubKey = 1102568376356344783630926367745025260170829125728
 
     def KeyGeneration(self):
         # p, q 生成
@@ -115,14 +117,9 @@ class DSA:
             if self.p > 0:                      # 這個 q 找不到 1024 bit 的 p
                 break
 
-        self.a = MyMath.SAMpow(2, (self.p - 1) // self.q, self.p)   # a ^ q mod p = 1
-        self.d = random.randint(1, self.q)                          # priKey -> d 亂數
-        self.b = MyMath.SAMpow(self.a, self.d, self.p)              # pubKey -> b = a ^ d mod p
-        print("Kpub-p:", self.p)
-        print("Kpub-q:", self.q)
-        print("Kpub-a:", self.a)
-        print("Kpub-b:", self.b)
-        print("Kpri-d:", self.d)
+        self.a = MyMath.SAMpow(2, (self.p - 1) // self.q, self.p)       # a ^ q mod p = 1
+        self.priKey = random.randint(1, self.q)                         # priKey -> d 亂數
+        self.pubKey = MyMath.SAMpow(self.a, self.priKey, self.p)        # pubKey -> b = a ^ d mod p
 
     # 以下用到
     # a ^ -1 mod p <=> a ^ (p - 2) mod p
@@ -132,31 +129,86 @@ class DSA:
         # message is x, 對他簽名
         hashFunc = hashlib.sha1()
         hashFunc.update(x)
-        Hx = int(hashFunc.hexdigest(), 16)                                          # Hash(x)
-        Ke = random.randint(1, self.q - 1)                                          # 暫時的亂數
-        r = MyMath.SAMpow(self.a, Ke, self.p) % self.q                              # r = (a ^ ke mod p) mod q
-        s = ((Hx + self.d * r) * MyMath.SAMpow(Ke, self.q - 2, self.q)) % self.q    # (Hash(x) + d * r)(Ke ^ -1) mod q
+        Hx = int(hashFunc.hexdigest(), 16)                                                  # Hash(x)
+        Ke = random.randint(1, self.q - 1)                                                  # 暫時的亂數
+        r = MyMath.SAMpow(self.a, Ke, self.p) % self.q                                      # r = (a ^ ke mod p) mod q
+        s = ((Hx + self.priKey * r) * MyMath.SAMpow(Ke, self.q - 2, self.q)) % self.q       # (Hash(x) + priKey * r)(Ke ^ -1) mod q
         return r, s
 
 
     def SignatureVerification(self, x, r, s):
         hashFunc = hashlib.sha1()
         hashFunc.update(x)
-        Hx = int(hashFunc.hexdigest(), 16)                                          # Hash(x)
-        w = MyMath.SAMpow(s, self.q-2, self.q)                                      # w = s ^ -1 mod q
-        u1 = (w * Hx) % self.q                                                      # u1 = (w * Hx) % q 
-        u2 = (w * r) % self.q                                                       # u2 = (w * r) % q
+        Hx = int(hashFunc.hexdigest(), 16)                                              # Hash(x)
+        w = MyMath.SAMpow(s, self.q-2, self.q)                                          # w = s ^ -1 mod q
+        u1 = (w * Hx) % self.q                                                          # u1 = (w * Hx) % q 
+        u2 = (w * r) % self.q                                                           # u2 = (w * r) % q
 
-        # v = ((a ^ u1 * b ^ u2) mod p) mod q 
-        v = ((MyMath.SAMpow(self.a, u1, self.p) * MyMath.SAMpow(self.b, u2, self.p)) % self.p) % self.q
+        # v = ((a ^ u1 * pubKey ^ u2) mod p) mod q 
+        v = ((MyMath.SAMpow(self.a, u1, self.p) * MyMath.SAMpow(self.pubKey, u2, self.p)) % self.p) % self.q
 
         # 驗章
         if v == r:
-            print('good')
+            return True
         else:
-            print('bad')
+            return False
 
-dsa = DSA()
-dsa.KeyGeneration()
-r, s = dsa.SignatureGeneration(b"myDSAbooo")
-dsa.SignatureVerification(b"myDSAbooo", r, s)
+def printUsage():
+    print('Please input Hex.')
+    print('Usage: -keygen')
+    print('Usage: -sign <message>')
+    print('Usage: -veri <message> <r> <s>')
+
+
+def main():
+    if len(sys.argv) < 2:
+        printUsage()
+        return
+
+    dsa = DSA()
+
+    if sys.argv[1] == '-keygen':
+        dsa.KeyGeneration()
+        print("Kpub-p:", dsa.p)
+        print("Kpub-q:", dsa.q)
+        print("Kpub-a:", dsa.a)
+        print("Kpub-pubKey:", dsa.pubKey)
+        print("Kpri-priKey:", dsa.priKey)
+
+    if sys.argv[1] == '-sign':
+        if len(sys.argv) < 3:
+            printUsage()
+            return
+        message = str.encode(sys.argv[2])
+        dsa.p = int(input('Input p: '))
+        dsa.q = int(input('Input q: '))
+        dsa.a = int(input('Input a: '))
+        dsa.priKey = int(input('input priKey: '))
+        r, s = dsa.SignatureGeneration(message)
+        print('===============get r, s===============')
+        print('r:', r)
+        print('s:', s)
+
+    if sys.argv[1] == '-veri':
+        if len(sys.argv) < 3:
+            printUsage()
+            return
+        message = str.encode(sys.argv[2])
+        dsa.p = int(input('Input p: '))
+        dsa.q = int(input('Input q: '))
+        dsa.a = int(input('Input a: '))
+        dsa.pubKey = int(input('Input pubKey: '))
+        r = int(input('Input r: '))
+        s = int(input('Input s: '))
+        
+        print('=================result=================')
+        if dsa.SignatureVerification(message, r, s):
+            print('Valid.')
+        else:
+            print('Invalid.')
+
+
+
+if __name__ == "__main__":
+    main()
+    pass
