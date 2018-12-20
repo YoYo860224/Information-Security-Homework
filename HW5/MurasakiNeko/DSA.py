@@ -109,9 +109,12 @@ class DSA:
         hashFunc = hashlib.sha1()
         hashFunc.update(x)
         x = int(hashFunc.hexdigest(), 16)
-        Ke = random.randint(2, self.q - 1)
-        r = Math.pow(self.a, Ke, self.p) % self.q
-        s = (x + self.d * r) * Math.ModularInverse(Ke, self.q) % self.q
+        r = 0
+        s = 0
+        while r == 0 or s == 0:
+            Ke = random.randint(2, self.q - 1)
+            r = Math.pow(self.a, Ke, self.p) % self.q
+            s = (x + self.d * r) * Math.ModularInverse(Ke, self.q) % self.q
         print("Signature:", r, s)
         return r, s
 
