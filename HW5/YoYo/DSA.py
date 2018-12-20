@@ -157,7 +157,7 @@ def printUsage():
     print('Please input Hex.')
     print('Usage: -keygen')
     print('Usage: -sign <message>')
-    print('Usage: -veri <message> <r> <s>')
+    print('Usage: -veri <message>')
 
 
 def main():
