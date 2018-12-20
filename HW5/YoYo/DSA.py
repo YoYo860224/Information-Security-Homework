@@ -116,43 +116,47 @@ class DSA:
                 break
 
         self.a = MyMath.SAMpow(2, (self.p - 1) // self.q, self.p)   # a ^ q mod p = 1
-        self.d = random.randint(1, self.q)                          # d 亂數
-        self.b = MyMath.SAMpow(self.a, self.d, self.p)              # b = a ^ d mod p
+        self.d = random.randint(1, self.q)                          # priKey -> d 亂數
+        self.b = MyMath.SAMpow(self.a, self.d, self.p)              # pubKey -> b = a ^ d mod p
         print("Kpub-p:", self.p)
         print("Kpub-q:", self.q)
         print("Kpub-a:", self.a)
         print("Kpub-b:", self.b)
         print("Kpri-d:", self.d)
 
-    def Sign(self, x):
+    # 以下用到
+    # a ^ -1 mod p <=> a ^ (p - 2) mod p
+    # a ^  0 mod p <=> a ^ (p - 1) mod p = 1 (By 歐拉)
+
+    def SignatureGeneration(self, x):
+        # message is x, 對他簽名
         hashFunc = hashlib.sha1()
         hashFunc.update(x)
-        Hx = int(hashFunc.hexdigest(), 16)
-        Ke = random.randint(1, self.q)
-        r = MyMath.SAMpow(self.a, Ke, self.p) % self.q
-        s = ((Hx + self.d * r) * MyMath.SAMpow(Ke, self.q - 2, self.q)) % self.q
+        Hx = int(hashFunc.hexdigest(), 16)                                          # Hash(x)
+        Ke = random.randint(1, self.q - 1)                                          # 暫時的亂數
+        r = MyMath.SAMpow(self.a, Ke, self.p) % self.q                              # r = (a ^ ke mod p) mod q
+        s = ((Hx + self.d * r) * MyMath.SAMpow(Ke, self.q - 2, self.q)) % self.q    # (Hash(x) + d * r)(Ke ^ -1) mod q
         return r, s
 
-    def Verify(self, x, r, s):
+
+    def SignatureVerification(self, x, r, s):
         hashFunc = hashlib.sha1()
         hashFunc.update(x)
-        Hx = int(hashFunc.hexdigest(), 16)
-        w = MyMath.SAMpow(s, self.q-2, self.q)
-        u1 = (w * Hx) % self.q
-        u2 = (w * r) % self.q
+        Hx = int(hashFunc.hexdigest(), 16)                                          # Hash(x)
+        w = MyMath.SAMpow(s, self.q-2, self.q)                                      # w = s ^ -1 mod q
+        u1 = (w * Hx) % self.q                                                      # u1 = (w * Hx) % q 
+        u2 = (w * r) % self.q                                                       # u2 = (w * r) % q
+
+        # v = ((a ^ u1 * b ^ u2) mod p) mod q 
         v = ((MyMath.SAMpow(self.a, u1, self.p) * MyMath.SAMpow(self.b, u2, self.p)) % self.p) % self.q
-        if (v % self.q) == (r % self.q):
+
+        # 驗章
+        if v == r:
             print('good')
         else:
             print('bad')
 
-
-    
-
-# dsa = DSA()
-# dsa.KeyGeneration()
-
 dsa = DSA()
 dsa.KeyGeneration()
-r, s = dsa.Sign(b"myDSAbooo")
-dsa.Verify(b"myDSAbooo", r, s)
+r, s = dsa.SignatureGeneration(b"myDSAbooo")
+dsa.SignatureVerification(b"myDSAbooo", r, s)
