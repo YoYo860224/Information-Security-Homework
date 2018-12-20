@@ -100,7 +100,7 @@ class DSA:
                 break
 
         self.a = Math.pow(2, (self.p - 1) // self.q, self.p)
-        self.d = random.randint(1, self.q)
+        self.d = random.randint(1, self.q - 1)
         self.b = Math.pow(self.a, self.b, self.p)
         print("Kpub:", self.p, self.q, self.a, self.b)
         print("Kpri:", self.d)
@@ -109,7 +109,7 @@ class DSA:
         hashFunc = hashlib.sha1()
         hashFunc.update(x)
         x = int(hashFunc.hexdigest(), 16)
-        Ke = random.randint(1, self.q)
+        Ke = random.randint(2, self.q - 1)
         r = Math.pow(self.a, Ke, self.p) % self.q
         s = (x + self.d * r) * Math.ModularInverse(Ke, self.q) % self.q
         print("Signature:", r, s)
