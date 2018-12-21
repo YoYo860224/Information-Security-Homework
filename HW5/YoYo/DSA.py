@@ -76,15 +76,6 @@ class MyMath:
             return (g, y2 - (b//a) * x2, x2)
             #      (g,       x1      , y1) 
 
-    @staticmethod
-    def modInv(a, m):
-        (g, x, y) = MyMath.egcd(a, m)
-        # ax + my = 1
-        # ax  (mod m) = 1  (mod m)
-        if g == 1:
-            return x % m
-        else:
-            raise Exception('modular inverse does not exist')
 
 class DSA:
     def __init__(self):
