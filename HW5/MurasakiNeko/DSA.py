@@ -33,14 +33,6 @@ class Math:
         return True
 
     @staticmethod
-    def __ExtendGCD(a, b):
-        if b == 0:
-            return 1, 0
-        else:
-            x, y = Math.__ExtendGCD(b, a % b)
-            return y, (x - (a // b) * y)
-
-    @staticmethod
     def makePrime(bits):
         used = []
         while True:
@@ -62,10 +54,6 @@ class Math:
                 output *= x
             output %= z
         return output
-
-    @staticmethod
-    def ModularInverse(val, mod):
-        return Math.__ExtendGCD(val, mod)[0] % mod
 
 
 class DSA:
